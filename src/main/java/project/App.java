@@ -1,6 +1,5 @@
 package project;
 
-import com.google.protobuf.ByteString;
 import project.games.battleships.BattleshipsGame;
 import project.games.battleships.board.Coords;
 import project.games.battleships.board.PlayerBoard;
@@ -23,7 +22,7 @@ public class App
         try {
             player1Board.addShip(new Ship(5, Coords.of("a1"), Coords.of("a5")));
             player1Board.addShip(new Ship(5, Coords.of("b6"), Coords.of("j6")));
-            //player1Board.addShip(new Ship(5, Coords.of("a2"), Coords.of("e2")));
+            player1Board.addShip(new Ship(5, Coords.of("b3"), Coords.of("e5"))); // Throws exception (Good)
         } catch (InvalidShipLocation | InvalidShipLength | ShipOverlappingException e) {
             e.printStackTrace();
         }
