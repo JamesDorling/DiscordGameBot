@@ -1,9 +1,14 @@
 package project;
 
+import com.google.protobuf.ByteString;
+import project.games.battleships.BattleshipsGame;
 import project.games.battleships.board.Coords;
 import project.games.battleships.board.PlayerBoard;
+import project.games.battleships.exceptions.InvalidShipLength;
 import project.games.battleships.exceptions.InvalidShipLocation;
+import project.games.battleships.exceptions.ShipOverlappingException;
 import project.games.battleships.ships.Ship;
+import project.games.battleships.view.OutputCentre;
 
 /**
  * Hello world!
@@ -12,15 +17,22 @@ import project.games.battleships.ships.Ship;
 public class App 
 {
     public static void main(String[] args) {
-        PlayerBoard board = new PlayerBoard();
+        PlayerBoard player1Board = BattleshipsGame.getBoards().getPlayer1Board();
+        PlayerBoard player2Board = BattleshipsGame.getBoards().getPlayer2Board();
 
         try {
-            board.ships.add(new Ship(new Coords("a1"), new Coords("a5")));
-        } catch (InvalidShipLocation e) {
+            player1Board.addShip(new Ship(5, Coords.of("a1"), Coords.of("a5")));
+            player1Board.addShip(new Ship(5, Coords.of("b6"), Coords.of("j6")));
+            //player1Board.addShip(new Ship(5, Coords.of("a2"), Coords.of("e2")));
+        } catch (InvalidShipLocation | InvalidShipLength | ShipOverlappingException e) {
             e.printStackTrace();
         }
 
-        board.shoot(new Coords("a3"));
-        System.out.println(board.getBoardAsciiForEnemy());
+        player1Board.shoot(Coords.of("a3"));
+        player1Board.shoot(Coords.of("b1"));
+        player1Board.shoot(Coords.of("c6"));
+        player1Board.shoot(Coords.of("d6"));
+        System.out.println(OutputCentre.printCurrentPlayer1GridForPlayer());
+        System.out.println(OutputCentre.printCurrentPlayer2GridForEnemy());
     }
 }

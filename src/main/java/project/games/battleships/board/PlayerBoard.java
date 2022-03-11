@@ -1,11 +1,11 @@
 package project.games.battleships.board;
 
+import project.games.battleships.exceptions.ShipOverlappingException;
 import project.games.battleships.ships.Ship;
 
 import java.util.*;
 
 public class PlayerBoard {
-    public Map<Coords, Boolean> board = new TreeMap<>();
     public Coords[][] playerBoard = new Coords[10][10];
     public ArrayList<Ship> ships = new ArrayList<>();
 
@@ -15,20 +15,48 @@ public class PlayerBoard {
 
     public String getBoardAsciiForEnemy() {
         String[] boardData = new String[100];
-        int i = 0;
-        for (Map.Entry<Coords, Boolean> entry : board.entrySet()) {
-            if (entry.getValue())
-                for (Ship ship : ships) {
-                    if (ship.isOnCoordinate(entry.getKey())) {
-                        boardData[i] = "✔";
-                    } else {
-                        boardData[i] = "x";
+        //int i = 0;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (playerBoard[i][j].getShot()) {
+                    boardData[(i * 10) + j] = "x";
+                    for (Ship ship : ships) {
+                        if (ship.isOnCoordinate(playerBoard[i][j])) {
+                            boardData[(i * 10) + j] = "✔";
+                        }
                     }
                 }
+                else {
+                    boardData[(i * 10) + j] = " ";
+                }
+            }
+        }
+        return formatAsciiOutput(boardData);
+    }
 
-            else
-                boardData[i] = " ";
-            i++;
+    public String getBoardAsciiForPlayer() {
+        String[] boardData = new String[100];
+        //int i = 0;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (playerBoard[i][j].getShot()) {
+                    boardData[(i * 10) + j] = "x";
+                    for (Ship ship : ships) {
+                        if (ship.isOnCoordinate(playerBoard[i][j])) {
+                            boardData[(i * 10) + j] = "✔";
+                        }
+                    }
+                }
+                else {
+                    boardData[(i * 10) + j] = " ";
+                    for (Ship ship : ships) {
+                        if (ship.isOnCoordinate(playerBoard[i][j])) {
+                            boardData[(i * 10) + j] = "o";
+                        }
+                    }
+
+                }
+            }
         }
         return formatAsciiOutput(boardData);
     }
@@ -40,7 +68,7 @@ public class PlayerBoard {
             output.append(i);
             output.append(" | ");
             for (int j = 0; j < 10; j++) {
-                output.append(boardData[i + j]);
+                output.append(boardData[i + (j * 10)]);
                 output.append(" | ");
             }
             output.delete(output.length() - 3, output.length());
@@ -52,26 +80,41 @@ public class PlayerBoard {
         return output.toString();
     }
 
-//    private void generateBlankBoard() {
-//        for (int i = 1; i < 11; i++) {
-//            for (int j = 0; j < 10; j++) {
-//                board.put(new Coords(CharacterAxis.NUMERICAL_ALPHABET.get(i), j), false);
-//            }
-//        }
-//
-//        System.out.println(CharacterAxis.NUMERICAL_ALPHABET);
-//        System.out.println(board);
-//    }
-
     private void generateBlankBoard() {
-        for (int i = 1; i < 11; i++) {
+        for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-
+                playerBoard[i][j] = new Coords(CharacterAxis.NUMERICAL_ALPHABET.get(i+1), j);
             }
         }
     }
 
-    public void shoot(Coords coords) throws IndexOutOfBoundsException {
-        board.replace(coords, true);
+    public Boolean shoot(Coords coords) throws IndexOutOfBoundsException {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if(playerBoard[i][j].is(coords)) {
+                    playerBoard[i][j].setShot(true);
+                    for (Ship ship : ships) {
+                        if (ship.isOnCoordinate(playerBoard[i][j])) {
+                            ship.getShot(playerBoard[i][j]);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void addShip(Ship ship) throws ShipOverlappingException {
+        for (Ship existingShips : ships) {
+            for (Coords coordinate : ship.getCoordinates()) {
+                if(existingShips.isOnCoordinate(coordinate)) {
+                    throw new ShipOverlappingException("Ship is overlapping on point: " + coordinate);
+                }
+            }
+        }
+
+        //If it gets to this point it should be fine. May need to add more exceptions to limit ship sizes.
+        ships.add(ship);
     }
 }

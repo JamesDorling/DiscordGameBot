@@ -1,5 +1,7 @@
 package project.games.battleships.board;
 
+import java.util.Objects;
+
 public class Coords implements Comparable<Coords>{
     private Character column;
     private Integer row;
@@ -47,5 +49,24 @@ public class Coords implements Comparable<Coords>{
     public int compareTo(Coords o) {
         return ((CharacterAxis.COMPARISON_ALPHABET.get(this.column) * 10) + this.getRow()) -
                ((CharacterAxis.COMPARISON_ALPHABET.get(o.column) * 10) + o.getRow());
+    }
+
+    public boolean is(Coords coordinates) {
+        return (Objects.equals(this.column, coordinates.column)) && (Objects.equals(this.row, coordinates.row));
+    }
+
+    public static Coords of(String coordinateString) {
+        return new Coords(coordinateString);
+    }
+
+    public Integer getLinearDistance(Coords comparedCoordinates) {
+        int result = 0;
+        if (!Objects.equals(this.getRow(), comparedCoordinates.getRow())) {
+            result += comparedCoordinates.getRow() - this.getRow();
+        }
+        if (!Objects.equals(this.getColumn(), comparedCoordinates.getColumn())) {
+            result += CharacterAxis.ALPHABET.get(comparedCoordinates.getColumn()) - CharacterAxis.ALPHABET.get(this.getColumn());
+        }
+        return result;
     }
 }

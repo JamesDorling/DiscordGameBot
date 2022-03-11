@@ -1,12 +1,13 @@
 package project.games.battleships.ships;
 
 import org.junit.jupiter.api.*;
+import project.games.battleships.exceptions.InvalidShipLength;
 import project.games.battleships.exceptions.InvalidShipLocation;
 
 public class ShipTests {
     @Nested
     @DisplayName("Ship Creation Tests")
-    class shipCreationTests {
+    class ShipCreationTests {
         Ship ship;
 
         @Test
@@ -14,9 +15,9 @@ public class ShipTests {
         void creatingAValid5LengthShip()
         {
             try {
-                ship = new Ship("a1", "a5");
+                ship = new Ship(5, "a1", "a5");
                 Assertions.assertEquals(5, ship.getCoordinates().length);
-            } catch (InvalidShipLocation e) {
+            } catch (InvalidShipLocation | InvalidShipLength e) {
                 Assertions.fail("Invalid ship location thrown.");
             }
         }
