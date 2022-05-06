@@ -31,6 +31,10 @@ public class App
         player1Board.shoot(Coords.of("b1"));
         player1Board.shoot(Coords.of("c6"));
         player1Board.shoot(Coords.of("d6"));
+
+        player2Board.shoot(Coords.of("b3"));
+        player2Board.shoot(Coords.of("a0"));
+
         System.out.println(OutputCentre.printCurrentPlayer1GridForPlayer());
         System.out.println(OutputCentre.printCurrentPlayer2GridForEnemy());
     }

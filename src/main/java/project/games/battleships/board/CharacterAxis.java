@@ -29,18 +29,4 @@ public class CharacterAxis {
              9,'i',
              10, 'j'
     ));
-
-    //It makes it easier to compare them.
-    public static final TreeMap<Character, Integer> COMPARISON_ALPHABET = new TreeMap<>(Map.of(
-            'a', 10,
-            'b', 20,
-            'c', 30,
-            'd', 40,
-            'e', 50,
-            'f', 60,
-            'g', 70,
-            'h', 80,
-            'i', 90,
-            'j', 100
-    ));
 }

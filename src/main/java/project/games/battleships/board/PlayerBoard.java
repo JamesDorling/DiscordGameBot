@@ -117,4 +117,18 @@ public class PlayerBoard {
         //If it gets to this point it should be fine. May need to add more exceptions to limit ship sizes.
         ships.add(ship);
     }
+
+    public PlayerBoard setup() {
+        return this;
+    }
+
+    public boolean checkStillAlive() {
+        boolean result = true;
+        for (Ship ship : ships) {
+            if(!ship.isSunk()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -47,8 +47,8 @@ public class Coords implements Comparable<Coords>{
 
     @Override //Might not need the comparison alphabet thingy. Will have a look tomorrow after work.
     public int compareTo(Coords o) {
-        return ((CharacterAxis.COMPARISON_ALPHABET.get(this.column) * 10) + this.getRow()) -
-               ((CharacterAxis.COMPARISON_ALPHABET.get(o.column) * 10) + o.getRow());
+        return ((CharacterAxis.ALPHABET.get(this.column) * 100) + this.getRow()) -
+               ((CharacterAxis.ALPHABET.get(o.column) * 100) + o.getRow());
     }
 
     public boolean is(Coords coordinates) {

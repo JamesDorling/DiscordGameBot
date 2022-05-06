@@ -20,16 +20,10 @@ public class BoardManager {
     }
 
     public Boolean checkGameNotOver() {
-        for (Ship ship : player1Board.ships) {
-            if(ship.isSunk()) {
-                return false;
-            }
-        }
-        for (Ship ship : player2Board.ships) {
-            if(ship.isSunk()) {
-                return false;
-            }
-        }
+        return player1Board.checkStillAlive() && player2Board.checkStillAlive();
+    }
+
+    public boolean doTurn(PlayerBoard player) {
         return true;
     }
 }
