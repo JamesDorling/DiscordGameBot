@@ -8,9 +8,18 @@ import java.util.*;
 public class PlayerBoard {
     public Coords[][] playerBoard = new Coords[10][10];
     public ArrayList<Ship> ships = new ArrayList<>();
+    private PlayerBoard opposingPlayer;
 
     public PlayerBoard() {
         generateBlankBoard();
+    }
+
+    public void setOpposingPlayer(PlayerBoard opposingPlayer) {
+        this.opposingPlayer = opposingPlayer;
+    }
+
+    public PlayerBoard getOpposingPlayer() {
+        return opposingPlayer;
     }
 
     public String getBoardAsciiForEnemy() {
@@ -88,18 +97,12 @@ public class PlayerBoard {
         }
     }
 
-    public Boolean shoot(Coords coords) throws IndexOutOfBoundsException {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                if(playerBoard[i][j].is(coords)) {
-                    playerBoard[i][j].setShot(true);
-                    for (Ship ship : ships) {
-                        if (ship.isOnCoordinate(playerBoard[i][j])) {
-                            ship.getShot(playerBoard[i][j]);
-                            return true;
-                        }
-                    }
-                }
+    public Boolean shoot(Coords coords) {
+        playerBoard[CharacterAxis.ALPHABET.get(coords.getColumn())-1][coords.getRow()].setShot(true);
+        for (Ship ship : ships) {
+            if (ship.isOnCoordinate(coords)) {
+                ship.getShot(coords);
+                return true;
             }
         }
         return false;
@@ -123,12 +126,11 @@ public class PlayerBoard {
     }
 
     public boolean checkStillAlive() {
-        boolean result = true;
         for (Ship ship : ships) {
             if(!ship.isSunk()) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

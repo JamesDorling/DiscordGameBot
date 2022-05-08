@@ -75,6 +75,9 @@ public class Ship {
         for (Coords coordinate : this.getCoordinates()) {
             if(coordinate.is(coordinates)) {
                 coordinate.setShot(true);
+                if (checkIsSunk()) {
+                    setSunk(true);
+                }
             }
         }
     }

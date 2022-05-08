@@ -1,6 +1,7 @@
 package project.games.battleships.board;
 
-import project.games.battleships.ships.Ship;
+import project.games.battleships.view.InputCentre;
+import project.games.battleships.view.OutputCentre;
 
 public class BoardManager {
     private PlayerBoard player1Board;
@@ -9,6 +10,8 @@ public class BoardManager {
     public BoardManager() {
         player1Board = new PlayerBoard();
         player2Board = new PlayerBoard();
+        player1Board.setOpposingPlayer(player2Board);
+        player2Board.setOpposingPlayer(player1Board);
     }
 
     public PlayerBoard getPlayer1Board() {
@@ -23,7 +26,17 @@ public class BoardManager {
         return player1Board.checkStillAlive() && player2Board.checkStillAlive();
     }
 
-    public boolean doTurn(PlayerBoard player) {
-        return true;
+    public void doTurn(PlayerBoard player) {
+        //Output boards
+        System.out.println(OutputCentre.printCurrentPlayerGrid(player));
+        System.out.println(OutputCentre.printCurrentEnemyGrid(player));
+
+        //Receive input
+        Coords shot = InputCentre.receiveShot();
+        //Shoot at input
+        if(player.getOpposingPlayer().shoot(shot) && checkGameNotOver()) //If a hit, and the game is not over, give the player another turn
+        {
+            doTurn(player);
+        }
     }
 }

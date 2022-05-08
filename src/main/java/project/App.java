@@ -23,19 +23,11 @@ public class App
             player1Board.addShip(new Ship(5, Coords.of("a1"), Coords.of("a5")));
             player1Board.addShip(new Ship(5, Coords.of("b6"), Coords.of("j6")));
             player1Board.addShip(new Ship(5, Coords.of("b3"), Coords.of("e5"))); // Throws exception (Good)
+            player2Board.addShip(new Ship(5, Coords.of("a1"), Coords.of("a6")));
         } catch (InvalidShipLocation | InvalidShipLength | ShipOverlappingException e) {
             e.printStackTrace();
         }
 
-        player1Board.shoot(Coords.of("a3"));
-        player1Board.shoot(Coords.of("b1"));
-        player1Board.shoot(Coords.of("c6"));
-        player1Board.shoot(Coords.of("d6"));
-
-        player2Board.shoot(Coords.of("b3"));
-        player2Board.shoot(Coords.of("a0"));
-
-        System.out.println(OutputCentre.printCurrentPlayer1GridForPlayer());
-        System.out.println(OutputCentre.printCurrentPlayer2GridForEnemy());
+        BattleshipsGame.run();
     }
 }

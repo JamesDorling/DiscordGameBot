@@ -1,6 +1,7 @@
 package project.games.battleships.view;
 
 import project.games.battleships.BattleshipsGame;
+import project.games.battleships.board.PlayerBoard;
 import project.games.battleships.ships.Ship;
 
 public class OutputCentre {
@@ -32,6 +33,20 @@ public class OutputCentre {
         StringBuilder output = new StringBuilder("Enemy Board:");
         output.append("\n");
         output.append(BattleshipsGame.getBoards().getPlayer2Board().getBoardAsciiForEnemy());
+        return output.toString();
+    }
+
+    public static String printCurrentPlayerGrid(PlayerBoard player) {
+        StringBuilder output = new StringBuilder("Enemy Board:");
+        output.append("\n");
+        output.append(player.getBoardAsciiForPlayer());
+        return output.toString();
+    }
+
+    public static String printCurrentEnemyGrid(PlayerBoard player) {
+        StringBuilder output = new StringBuilder("Enemy Board:");
+        output.append("\n");
+        output.append(player.getOpposingPlayer().getBoardAsciiForEnemy());
         return output.toString();
     }
 }
