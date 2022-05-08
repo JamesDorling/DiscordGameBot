@@ -37,7 +37,7 @@ public class OutputCentre {
     }
 
     public static String printCurrentPlayerGrid(PlayerBoard player) {
-        StringBuilder output = new StringBuilder("Enemy Board:");
+        StringBuilder output = new StringBuilder("Player Board:");
         output.append("\n");
         output.append(player.getBoardAsciiForPlayer());
         return output.toString();

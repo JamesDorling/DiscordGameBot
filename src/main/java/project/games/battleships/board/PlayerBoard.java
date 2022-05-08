@@ -2,6 +2,7 @@ package project.games.battleships.board;
 
 import project.games.battleships.exceptions.ShipOverlappingException;
 import project.games.battleships.ships.Ship;
+import project.games.battleships.view.InputCentre;
 
 import java.util.*;
 
@@ -121,8 +122,12 @@ public class PlayerBoard {
         ships.add(ship);
     }
 
-    public PlayerBoard setup() {
-        return this;
+    public void setup() {
+        InputCentre.receiveShipLocation(5, "Carrier", this);
+        InputCentre.receiveShipLocation(4, "Battleship", this);
+        InputCentre.receiveShipLocation(3, "Cruiser", this);
+        InputCentre.receiveShipLocation(3, "Submarine", this);
+        InputCentre.receiveShipLocation(2, "Dingy", this);
     }
 
     public boolean checkStillAlive() {

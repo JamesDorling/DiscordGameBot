@@ -7,7 +7,8 @@ Firstly I am going to make this bot able to facilitate a game of Battleships (Pl
 but I may add more later.
 
 ## TODO
-* Setup game
+* Test setup game
 * Display victor
 * Link with Discord bot
 * Repeat turn if an error occurs
+* large amounts of testing

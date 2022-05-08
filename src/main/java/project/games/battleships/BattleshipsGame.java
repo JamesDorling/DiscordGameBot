@@ -16,6 +16,9 @@ public class BattleshipsGame {
         Get the players to input their ship locations on separate threads
         then put them in the loop to play the game
         */
+        boards.getPlayer1Board().setup();
+        boards.getPlayer2Board().setup();
+
 
         while (boards.checkGameNotOver()) {
             // Do the turns
