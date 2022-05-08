@@ -23,6 +23,7 @@ public class BattleshipsGame {
         while (boards.checkGameNotOver()) {
             // Do the turns
             boards.doTurn(boards.getPlayer1Board());
+            if(!boards.checkGameNotOver()) break;
             boards.doTurn(boards.getPlayer2Board());
         }
     }

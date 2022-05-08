@@ -20,8 +20,8 @@ public class Coords implements Comparable<Coords>{
         this.row = row;
     }
     public Coords(String coordinates) {
-        this.column = coordinates.charAt(0);
-        this.row = Integer.parseInt(Character.toString(coordinates.charAt(1)));
+        this.column = coordinates.toLowerCase().charAt(0);
+        this.row = Integer.parseInt(Character.toString(coordinates.toLowerCase().charAt(1)));
     }
 
     public Character getColumn() {
@@ -45,7 +45,7 @@ public class Coords implements Comparable<Coords>{
         return Character.toString(column) + row;
     }
 
-    @Override //Might not need the comparison alphabet thingy. Will have a look tomorrow after work.
+    @Override
     public int compareTo(Coords o) {
         return ((CharacterAxis.ALPHABET.get(this.column) * 100) + this.getRow()) -
                ((CharacterAxis.ALPHABET.get(o.column) * 100) + o.getRow());

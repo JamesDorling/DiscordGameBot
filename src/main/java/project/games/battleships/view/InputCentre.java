@@ -33,18 +33,13 @@ public class InputCentre {
             System.out.println("Where does the ship end: ");
             Coords end = Coords.of(scanner.nextLine());
             playerBoard.addShip(new Ship(size, start, end));
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid coordinates!");
-            receiveShipLocation(size, shipName, playerBoard);
-        } catch (InvalidShipLocation invalidShipLocation) {
-            System.out.println("Invalid Ship Location!");
-            receiveShipLocation(size, shipName, playerBoard);
-        } catch (InvalidShipLength invalidShipLength) {
-            System.out.println("Invalid Ship Length!");
-            receiveShipLocation(size, shipName, playerBoard);
-        } catch (ShipOverlappingException e) {
-            System.out.println("Ship is overlapping another!");
-            receiveShipLocation(size, shipName, playerBoard);
-        }
+            return;
+        } catch (InputMismatchException e) {System.out.println("Invalid coordinates!");}
+        catch (InvalidShipLocation invalidShipLocation) { System.out.println("Invalid Ship Location!"); }
+        catch (InvalidShipLength invalidShipLength) { System.out.println("Invalid Ship Length!"); }
+        catch (ShipOverlappingException e) { System.out.println("Ship is overlapping another!"); }
+        catch (NumberFormatException e) { System.out.println("Invalid input."); }
+        receiveShipLocation(size, shipName, playerBoard);
+
     }
 }

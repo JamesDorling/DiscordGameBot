@@ -11,7 +11,6 @@ public class Ship {
 
     public Ship(int size, Coords start, Coords end) throws InvalidShipLocation, InvalidShipLength {
         sanitiseInputs(size, start, end);
-        //checkSize(size, start, end);
         if (!start.getRow().equals(end.getRow()))
         {
             setupCoordinates(start.getRow(), end.getRow(), start.getColumn());
@@ -20,6 +19,7 @@ public class Ship {
             setupCoordinates(start.getColumn(), end.getColumn(), start.getRow());
         }
         else throw new InvalidShipLocation("Ship was not placed at a valid location. Locations: " + start + " " + end);
+        checkSize(size);
     }
 
     public Ship(int size, String start, String end) throws InvalidShipLocation, InvalidShipLength {
@@ -97,5 +97,9 @@ public class Ship {
 
     public void setSunk(boolean sunk) {
         this.sunk = sunk;
+    }
+
+    public void checkSize(int desiredLength) throws InvalidShipLength {
+        if(this.getCoordinates().length != desiredLength) throw new InvalidShipLength("Ship isnt the correct length.");
     }
 }
