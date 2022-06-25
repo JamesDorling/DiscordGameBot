@@ -32,7 +32,7 @@ public class PlayerBoard {
                     boardData[(i * 10) + j] = "x";
                     for (Ship ship : ships) {
                         if (ship.isOnCoordinate(playerBoard[i][j])) {
-                            boardData[(i * 10) + j] = "✔";
+                            boardData[(i * 10) + j] = "⨂";
                         }
                     }
                 }

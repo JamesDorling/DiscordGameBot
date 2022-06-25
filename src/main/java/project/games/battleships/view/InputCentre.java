@@ -7,7 +7,6 @@ import project.games.battleships.exceptions.InvalidShipLocation;
 import project.games.battleships.exceptions.ShipOverlappingException;
 import project.games.battleships.ships.Ship;
 
-import java.sql.SQLOutput;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
