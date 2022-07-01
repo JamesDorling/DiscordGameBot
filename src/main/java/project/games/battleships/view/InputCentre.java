@@ -1,5 +1,6 @@
 package project.games.battleships.view;
 
+import net.dv8tion.jda.api.entities.User;
 import project.games.battleships.board.Coords;
 import project.games.battleships.board.PlayerBoard;
 import project.games.battleships.exceptions.InvalidShipLength;
@@ -11,14 +12,14 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class InputCentre {
-    public static Coords receiveShot() {
+    public static Coords receiveShotCommandLine() {
         System.out.println("Where are you shooting: ");
         Scanner scanner = new Scanner(System.in);
         try {
             return Coords.of(scanner.nextLine());
         } catch (InputMismatchException e) {
             System.out.println("Invalid coordinates!");
-            return receiveShot();
+            return receiveShotCommandLine();
         }
     }
 

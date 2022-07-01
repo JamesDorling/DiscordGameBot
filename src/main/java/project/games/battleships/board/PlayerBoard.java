@@ -1,5 +1,6 @@
 package project.games.battleships.board;
 
+import net.dv8tion.jda.api.entities.User;
 import project.games.battleships.exceptions.ShipOverlappingException;
 import project.games.battleships.ships.Ship;
 import project.games.battleships.view.InputCentre;
@@ -10,6 +11,9 @@ public class PlayerBoard {
     public Coords[][] playerBoard = new Coords[10][10];
     public ArrayList<Ship> ships = new ArrayList<>();
     private PlayerBoard opposingPlayer;
+    private User player;
+    private Boolean myTurn = false;
+    private boolean testRun = false;
 
     public PlayerBoard() {
         generateBlankBoard();
@@ -53,7 +57,7 @@ public class PlayerBoard {
                     boardData[(i * 10) + j] = "x";
                     for (Ship ship : ships) {
                         if (ship.isOnCoordinate(playerBoard[i][j])) {
-                            boardData[(i * 10) + j] = "✔";
+                            boardData[(i * 10) + j] = "⨂";
                         }
                     }
                 }
@@ -122,14 +126,6 @@ public class PlayerBoard {
         ships.add(ship);
     }
 
-    public void setup() {
-        InputCentre.receiveShipLocation(5, "Carrier", this);
-        InputCentre.receiveShipLocation(4, "Battleship", this);
-        InputCentre.receiveShipLocation(3, "Cruiser", this);
-        InputCentre.receiveShipLocation(3, "Submarine", this);
-        InputCentre.receiveShipLocation(2, "Dingy", this);
-    }
-
     public boolean checkStillAlive() {
         for (Ship ship : ships) {
             if(!ship.isSunk()) {
@@ -138,4 +134,26 @@ public class PlayerBoard {
         }
         return false;
     }
+
+    public boolean readyToPlay() {
+        return (ships.size() == 5) || testRun;
+    }
+
+    public User getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(User player) {
+        this.player = player;
+    }
+
+    public Boolean getTurn() {
+        return myTurn;
+    }
+
+    public void setTurn(Boolean myTurn) {
+        this.myTurn = myTurn;
+    }
+
+    public void setTestRun() {testRun = true;}
 }
