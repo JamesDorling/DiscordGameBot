@@ -20,8 +20,13 @@ public class Coords implements Comparable<Coords>{
         this.row = row;
     }
     public Coords(String coordinates) {
-        this.column = coordinates.toLowerCase().charAt(0);
-        this.row = Integer.parseInt(Character.toString(coordinates.toLowerCase().charAt(1)));
+        try {
+            this.column = coordinates.toLowerCase().charAt(0);
+            this.row = Integer.parseInt(Character.toString(coordinates.toLowerCase().charAt(1)));
+        } catch (NumberFormatException e) {
+            this.column = coordinates.toLowerCase().charAt(1);
+            this.row = Integer.parseInt(Character.toString(coordinates.toLowerCase().charAt(0)));
+        }
     }
 
     public Character getColumn() {
