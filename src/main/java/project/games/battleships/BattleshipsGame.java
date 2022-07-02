@@ -16,11 +16,6 @@ public class BattleshipsGame {
         boards = new BoardManager();
         boards.getPlayer1Board().setPlayer(player_one);
         boards.getPlayer2Board().setPlayer(player_two);
-
-        /* Setup game
-        Get the players to input their ship locations on separate threads
-        then put them in the loop to play the game
-        */
         boards.doTurn(boards.getPlayer2Board());
     }
 
