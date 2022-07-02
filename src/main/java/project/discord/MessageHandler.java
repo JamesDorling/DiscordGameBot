@@ -3,7 +3,8 @@ package project.discord;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import project.games.battleships.GameManager;
+import project.games.GameManager;
+import project.games.battleships.BattleshipsGame;
 import project.games.battleships.board.Coords;
 import project.games.battleships.board.PlayerBoard;
 import project.games.battleships.exceptions.InvalidPlayerException;
@@ -45,6 +46,7 @@ public class MessageHandler extends ListenerAdapter {
             return;
         }
         User player1, player2;
+        GameManager.getBattleshipsGame().initialChannel = event.getTextChannel();
         try {
             System.out.println("Challenge command received!");
             player1 = event.getUser();

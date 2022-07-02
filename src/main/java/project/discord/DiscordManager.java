@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import project.config.Config;
-import project.games.battleships.GameManager;
+import project.games.GameManager;
 
 import javax.security.auth.login.LoginException;
 
