@@ -1,4 +1,4 @@
-##Contributions
+## Contributions
 
 If you would like to contribute, feel free to! Just ping me a message in any way you want to.
 
