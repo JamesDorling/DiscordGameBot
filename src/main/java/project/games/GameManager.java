@@ -24,4 +24,5 @@ public class GameManager {
     public static BattleshipsGame getBattleshipsGame() {
         return battleshipsGame;
     }
+    public static ConnectFourGame getConnectFourGame() { return connectFourGame; }
 }

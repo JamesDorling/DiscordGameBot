@@ -13,6 +13,10 @@ import project.games.battleships.exceptions.InvalidShipLocation;
 import project.games.battleships.exceptions.ShipOverlappingException;
 import project.games.battleships.ships.Ship;
 import project.games.battleships.view.OutputCentre;
+import project.games.connectfour.board.C4User;
+import project.games.connectfour.exceptions.ColumnFullException;
+import project.games.connectfour.exceptions.InvalidColumnException;
+import project.games.connectfour.view.ConnectFourOutputCentre;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -23,10 +27,13 @@ public class MessageHandler extends ListenerAdapter {
     {
         switch(event.getName()) {
             case "ping" -> pingEvent(event);
-            case "challenge" -> challengeEvent(event);
+            case "battleshipchallenge" -> challengeEvent(event);
             case "shoot" -> shootEvent(event);
             case "setup" -> setupEvent(event);
             case "setuptest" -> setupEventTest(event);
+            case "connectfourchallenge" -> connectFourChallenge(event);
+            case "addtoken" -> addTokenEvent(event);
+            case "testtoken" -> testTokenEvent(event);
         }
 
     }
@@ -192,6 +199,99 @@ public class MessageHandler extends ListenerAdapter {
             sendDirectMessage(event.getUser(), "You are not playing!");
         }
     }
+
+    private void connectFourChallenge(SlashCommandInteractionEvent event) {
+        if(GameManager.getConnectFourGame().isGameRunning()) {
+            event.reply("Game currently running. Please wait for current game to end!").queue();
+            System.err.println("User tried to start a game while game was already running.");
+            return;
+        }
+        User player1, player2;
+        GameManager.getConnectFourGame().initialChannel = event.getTextChannel();
+        try {
+            System.out.println("Connect four challenge command received!");
+            player1 = event.getUser();
+            player2 = Objects.requireNonNull(event.getOption("opponent")).getAsUser();
+            System.out.println("Player has challenged: " + player2.getName());
+
+            event.reply("Starting game! \nPlayers are: " + player1.getName() + " versus " + player2.getName()).queue();
+            //sendDirectMessage(player1, ConnectFourOutputCentre.getBoardDataForOutput());
+            sendDirectMessage(player1, "Other player starts!");
+            //sendDirectMessage(player2, ConnectFourOutputCentre.getBoardDataForOutput());
+            sendDirectMessage(player2, "Use /addtoken to place a token!");
+            GameManager.getConnectFourGame().run(player1, player2);
+        }
+        catch (NullPointerException e) {
+            event.reply("No opponent found under that ID!").queue();
+            System.err.println("Failed to find user. Name provided:" + event.getOption("opponent"));
+            e.printStackTrace();
+        }
+    }
+
+    private void addTokenEvent(SlashCommandInteractionEvent event) {
+        if (!(event.getChannelType() == ChannelType.PRIVATE)) {
+            event.reply("This command is DM only!").queue();
+            return;
+        }
+        try {
+            C4User player = GameManager.getConnectFourGame().board.checkPlayer(event.getUser()); //doubles
+            event.reply("Token received!").queue();
+            int[] tokenPlace = GameManager.getConnectFourGame().board.addToken(Objects.requireNonNull(event.getOption("column")).getAsInt(), player);
+            if(GameManager.getConnectFourGame().board.checkForFour(tokenPlace[0], tokenPlace[1], player.getToken())) {
+                sendDirectMessage(player.getUser(), "You win!");
+                sendDirectMessage(player.getOpponent().getUser(), "You lose!");
+                sendChannelMessage(GameManager.getConnectFourGame().initialChannel, player.getUser().getName() + " has won at Connect Four!");
+                GameManager.resetConnectFour();
+                return;
+            }
+            GameManager.getConnectFourGame().board.doTurn(player.getOpponent());
+        } catch (ColumnFullException e) {
+            sendDirectMessage(event.getUser(), "Column is full! Please try again.");
+            System.err.println(event.getUser().getName() + " tried to add token to a full column.");
+        } catch (InvalidColumnException e) {
+            sendDirectMessage(event.getUser(), "Invalid column! Please refer to the grid.");
+            System.err.println(event.getUser().getName() + " tried to add token to an invalid column.");
+        } catch (InvalidPlayerException e) {
+            event.reply("You arent playing.").queue();
+            System.err.println(event.getUser().getName() + " tried to take part in someone else's game.");
+        }
+    }
+
+    private void testTokenEvent(SlashCommandInteractionEvent event) {
+        if (!(event.getChannelType() == ChannelType.PRIVATE)) {
+            event.reply("This command is DM only!").queue();
+            return;
+        }
+        try {
+            C4User player = GameManager.getConnectFourGame().board.checkPlayer(event.getUser()); //doubles
+            if (!player.isMyTurn()) {
+                event.reply("Not your turn!").queue();
+                return;
+            }
+            event.reply("Test Token received!").queue();
+            for(int i = 0; i < 3; i++) {
+                int[] tokenPlace = GameManager.getConnectFourGame().board.addToken(0, player);
+                if (GameManager.getConnectFourGame().board.checkForFour(tokenPlace[0], tokenPlace[1], player.getToken())) {
+                    sendDirectMessage(player.getUser(), "You win!");
+                    sendDirectMessage(player.getOpponent().getUser(), "You lose!");
+                    sendChannelMessage(GameManager.getConnectFourGame().initialChannel, player.getUser().getName() + " has won at Connect Four!");
+                    GameManager.resetConnectFour();
+                    return;
+                }
+            }
+            GameManager.getConnectFourGame().board.doTurn(player.getOpponent());
+        } catch (ColumnFullException e) {
+            sendDirectMessage(event.getUser(), "Column is full! Please try again.");
+            System.err.println(event.getUser().getName() + " tried to add token to a full column.");
+        } catch (InvalidColumnException e) {
+            sendDirectMessage(event.getUser(), "Invalid column! Please refer to the grid.");
+            System.err.println(event.getUser().getName() + " tried to add token to an invalid column.");
+        } catch (InvalidPlayerException e) {
+            event.reply("You arent playing.").queue();
+            System.err.println(event.getUser().getName() + " tried to take part in someone else's game.");
+        }
+    }
+
 
     public static void sendDirectMessage(User user, String message) {
         user.openPrivateChannel().flatMap((channel -> channel.sendMessage(message))).queue();
