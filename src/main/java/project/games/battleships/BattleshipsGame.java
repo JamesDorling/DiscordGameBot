@@ -1,10 +1,13 @@
 package project.games.battleships;
 
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import project.games.battleships.board.BoardManager;
 
 public class BattleshipsGame {
     private BoardManager boards;
+
+    public TextChannel initialChannel;
 
     public BoardManager getBoards() {
         return boards;
@@ -12,10 +15,10 @@ public class BattleshipsGame {
 
     private boolean gameRunning = false;
 
-    public void run(User player_one, User player_two) {
+    public void run(User playerOne, User playerTwo) {
         boards = new BoardManager();
-        boards.getPlayer1Board().setPlayer(player_one);
-        boards.getPlayer2Board().setPlayer(player_two);
+        boards.getPlayer1Board().setPlayer(playerOne);
+        boards.getPlayer2Board().setPlayer(playerTwo);
         boards.doTurn(boards.getPlayer2Board());
     }
 

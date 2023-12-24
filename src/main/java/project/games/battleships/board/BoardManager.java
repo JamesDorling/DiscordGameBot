@@ -1,7 +1,7 @@
 package project.games.battleships.board;
 
 import net.dv8tion.jda.api.entities.User;
-import project.games.battleships.GameManager;
+import project.games.GameManager;
 import project.games.battleships.exceptions.InvalidPlayerException;
 import project.games.battleships.view.OutputCentre;
 
@@ -39,6 +39,7 @@ public class BoardManager {
         if(!player.checkStillAlive()) {
             player.getPlayer().openPrivateChannel().flatMap(channel -> channel.sendMessage("You Lose!")).queue();
             player.getOpposingPlayer().getPlayer().openPrivateChannel().flatMap(channel -> channel.sendMessage("You Win!")).queue();
+            GameManager.getBattleshipsGame().initialChannel.sendMessage(player.getPlayer().getName() + " won at battleships!").queue();
             GameManager.resetBattleships(); //Will also set game running to false
             return;
         }
