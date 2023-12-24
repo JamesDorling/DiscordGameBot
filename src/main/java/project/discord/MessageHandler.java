@@ -212,7 +212,7 @@ public class MessageHandler extends ListenerAdapter {
             System.out.println("Connect four challenge command received!");
             player1 = event.getUser();
             player2 = Objects.requireNonNull(event.getOption("opponent")).getAsUser();
-            System.out.println("Player has challenged: " + player2.getName());
+            System.out.println("Player one: " + player1.getName() + " - Player 2: " + player2.getName());
 
             event.reply("Starting game! \nPlayers are: " + player1.getName() + " versus " + player2.getName()).queue();
             //sendDirectMessage(player1, ConnectFourOutputCentre.getBoardDataForOutput());
@@ -220,6 +220,15 @@ public class MessageHandler extends ListenerAdapter {
             //sendDirectMessage(player2, ConnectFourOutputCentre.getBoardDataForOutput());
             sendDirectMessage(player2, "Use /addtoken to place a token!");
             GameManager.getConnectFourGame().run(player1, player2);
+
+
+            try {
+                C4User player = null;
+                player = GameManager.getConnectFourGame().board.checkPlayer(event.getUser());
+                System.out.println("Player one: " + player.getUser().getName() + " - Player 2: " + player.getOpponent().getUser().getName());
+            } catch (InvalidPlayerException e) {
+                e.printStackTrace();
+            }
         }
         catch (NullPointerException e) {
             event.reply("No opponent found under that ID!").queue();
@@ -240,6 +249,7 @@ public class MessageHandler extends ListenerAdapter {
             if(GameManager.getConnectFourGame().board.checkForFour(tokenPlace[0], tokenPlace[1], player.getToken())) {
                 sendDirectMessage(player.getUser(), "You win!");
                 sendDirectMessage(player.getOpponent().getUser(), "You lose!");
+                System.out.println("Player one: " + player.getUser().getName() + " - Player 2: " + player.getOpponent().getUser().getName());
                 sendChannelMessage(GameManager.getConnectFourGame().initialChannel, player.getUser().getName() + " has won at Connect Four!");
                 GameManager.resetConnectFour();
                 return;

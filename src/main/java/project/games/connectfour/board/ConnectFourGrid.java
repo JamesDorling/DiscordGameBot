@@ -3,17 +3,17 @@ package project.games.connectfour.board;
 
 import net.dv8tion.jda.api.entities.User;
 import project.games.GameManager;
-import project.games.battleships.board.CharacterAxis;
-import project.games.battleships.board.Coords;
 import project.games.battleships.exceptions.InvalidPlayerException;
 import project.games.connectfour.exceptions.ColumnFullException;
 import project.games.connectfour.exceptions.InvalidColumnException;
 import project.games.connectfour.view.ConnectFourOutputCentre;
 
-import java.util.Arrays;
-
-//Now you might think "ooh James, make an interface and make both the battleships board and this use the same type of board"
-//To that I would say I do not have the time to refactor all of battleship's code to fit an interface. Maybe one day.
+/*
+    Now you might think "ooh James, make an interface and make both the battleships board and this use the same type of board"
+    To that I would say I do not have the time to refactor all of battleship's code to fit an interface. Maybe one day.
+    Also, they use different tiles to make the grid. There would be a way around this, but probably not one that would
+    seem neat.
+*/
 public class ConnectFourGrid {
     public ConnectFourTokenSpace[][] board = new ConnectFourTokenSpace[7][6];
 
@@ -21,7 +21,6 @@ public class ConnectFourGrid {
 
     public ConnectFourGrid() {
         generateBlankGrid();
-        //I could handle this in a constructor, but its just easier to do it here and doesnt make it any slower.
         player1 = new C4User();
         player2 = new C4User();
         player1.setOpponent(player2);
@@ -139,10 +138,10 @@ public class ConnectFourGrid {
             case UP -> checkDirection(column, row - 1, state, direction, count);
             case LEFT -> checkDirection(column - 1, row, state, direction, count);
             case DOWN -> checkDirection(column, row + 1, state, direction, count);
-            case UPLEFT -> checkDirection(column - 1, row - 1, state, direction, count);
-            case UPRIGHT -> checkDirection(column + 1, row - 1, state, direction, count);
-            case DOWNLEFT -> checkDirection(column - 1, row + 1, state, direction, count);
-            case DOWNRIGHT -> checkDirection(column + 1, row + 1, state, direction, count);
+            case UPLEFT -> checkDirection(column + 1, row - 1, state, direction, count);
+            case UPRIGHT -> checkDirection(column - 1, row - 1, state, direction, count);
+            case DOWNLEFT -> checkDirection(column + 1, row + 1, state, direction, count);
+            case DOWNRIGHT -> checkDirection(column - 1, row + 1, state, direction, count);
         };
     }
 
