@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import project.games.GameManager;
-import project.games.battleships.BattleshipsGame;
 import project.games.battleships.board.Coords;
 import project.games.battleships.board.PlayerBoard;
 import project.games.battleships.exceptions.InvalidPlayerException;
@@ -16,7 +15,7 @@ import project.games.battleships.view.OutputCentre;
 import project.games.connectfour.board.C4User;
 import project.games.connectfour.exceptions.ColumnFullException;
 import project.games.connectfour.exceptions.InvalidColumnException;
-import project.games.connectfour.view.ConnectFourOutputCentre;
+import project.games.dice.Die;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,6 +33,8 @@ public class MessageHandler extends ListenerAdapter {
             case "connectfourchallenge" -> connectFourChallenge(event);
             case "addtoken" -> addTokenEvent(event);
             case "testtoken" -> testTokenEvent(event);
+            case "roll" -> rollADice(event);
+            case "multiroll"-> rollMultipleDice(event);
         }
 
     }
@@ -302,6 +303,52 @@ public class MessageHandler extends ListenerAdapter {
         }
     }
 
+    public static void rollADice(SlashCommandInteractionEvent event) {
+        int faces = event.getOption("faces").getAsInt();
+        if(faces <= 0) {
+            event.reply("A 0 sided die doesnt exist!").queue();
+            return;
+        }
+        event.reply("Rolled a D" + faces + " and got " + Die.roll(faces)).queue();
+    }
+
+    public static void rollMultipleDice(SlashCommandInteractionEvent event) {
+        int times = event.getOption("times").getAsInt();
+        if(times <= 1) {
+            rollADice(event);
+            return;
+        }
+        int faces = event.getOption("faces").getAsInt();
+        if(faces <= 0) {
+            event.reply("A 0 sided die doesnt exist!").queue();
+            return;
+        }
+
+        int[] results = Die.roll(faces, times);
+
+        event.reply(
+                "Results from rolling a d" +
+                faces +
+                " die " +
+                times +
+                " times are " +
+                appendArray(results)
+        ).queue();
+    }
+
+    public static String appendArray(int[] array) {
+        StringBuilder answer = new StringBuilder();
+        int N = array.length;
+        for (int i = 0; i < N; i++) {
+            answer.append(array[i]);
+            if (i < N - 2) {
+                answer.append(", ");
+            } else if (i == N - 2) {
+                answer.append(".\n The total of these is: ");
+            }
+        }
+        return answer.toString();
+    }
 
     public static void sendDirectMessage(User user, String message) {
         user.openPrivateChannel().flatMap((channel -> channel.sendMessage(message))).queue();

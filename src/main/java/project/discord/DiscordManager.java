@@ -25,12 +25,14 @@ public class DiscordManager {
             commands.addCommands(
                     Commands.slash("ping", "Calculate the ping of the bot"),
 
+
                     Commands.slash("battleshipchallenge", "Challenge another user")
                             .addOption(OptionType.USER, "opponent", "The user you want to face", true),
                     Commands.slash("shoot", "Choose what place to shoot!")
                             .addOption(OptionType.STRING, "coords", "The coordinates of where you are shooting", true),
                     Commands.slash("setup", "Place your ships, ready to play!")
-                            .addOptions(new OptionData(OptionType.STRING, "5lengthstart", "Designate the start of your carrier", true),
+                            .addOptions(
+                                    new OptionData(OptionType.STRING, "5lengthstart", "Designate the start of your carrier", true),
                                     new OptionData(OptionType.STRING, "5lengthend", "Designate the end of your carrier", true),
                                     new OptionData(OptionType.STRING, "4lengthstart", "Designate the start of your battleship", true),
                                     new OptionData(OptionType.STRING, "4lengthend", "Designate the end of your battleship", true),
@@ -42,11 +44,21 @@ public class DiscordManager {
                                     new OptionData(OptionType.STRING, "2lengthend", "Designate the end of your dinghy", true)),
                     Commands.slash("setuptest", "Place a test ship, for easy testing!"),
 
+
                     Commands.slash("connectfourchallenge", "Challenge a friend to connect four!")
                             .addOption(OptionType.USER, "opponent", "The friend you are challenging", true),
                     Commands.slash("addtoken", "Add a token to a column in connect four")
                             .addOption(OptionType.INTEGER, "column", "Which column?", true),
-                    Commands.slash("testtoken", "Test the connect four game!")
+                    Commands.slash("testtoken", "Test the connect four game!"),
+
+
+                    Commands.slash("roll", "roll a die")
+                            .addOption(OptionType.INTEGER, "faces", "Number of faces on the die", true),
+                    Commands.slash("multiroll", "Roll multiple dice")
+                            .addOptions(
+                                    new OptionData(OptionType.INTEGER, "faces", "Number of faces on the die that will be rolled", true),
+                                    new OptionData(OptionType.INTEGER, "times", "Number of times to roll the die", true)
+                            )
                     ).queue();
 
             jda.addEventListener(new MessageHandler());
