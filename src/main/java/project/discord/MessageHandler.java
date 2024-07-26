@@ -3,6 +3,8 @@ package project.discord;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.CommandInteractionPayload;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import project.games.GameManager;
 import project.games.battleships.board.Coords;
 import project.games.battleships.board.PlayerBoard;
@@ -19,6 +21,7 @@ import project.games.dice.Die;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class MessageHandler extends ListenerAdapter {
     @Override
@@ -304,36 +307,45 @@ public class MessageHandler extends ListenerAdapter {
     }
 
     public static void rollADice(SlashCommandInteractionEvent event) {
-        int faces = event.getOption("faces").getAsInt();
-        if(faces <= 0) {
-            event.reply("A 0 sided die doesnt exist!").queue();
-            return;
+        Optional<OptionMapping> faces = Optional.ofNullable(event.getOption("faces"));
+        if (faces.isEmpty()) {
+            event.reply("No faces value provided. Cannot roll a non existent die!").queue();
+        } else {
+            if (faces.get().getAsInt() <= 0) {
+                event.reply("A 0 sided die doesnt exist!").queue();
+                return;
+            }
+            event.reply(
+                    "Rolled a D" + faces.get().getAsInt() + " and got " + Die.roll(faces.get().getAsInt())
+                ).queue();
         }
-        event.reply("Rolled a D" + faces + " and got " + Die.roll(faces)).queue();
     }
 
     public static void rollMultipleDice(SlashCommandInteractionEvent event) {
-        int times = event.getOption("times").getAsInt();
-        if(times <= 1) {
+        Optional<OptionMapping> times = Optional.ofNullable(event.getOption("times"));
+        if(times.isEmpty() || times.get().getAsInt() <= 1) {
             rollADice(event);
             return;
         }
-        int faces = event.getOption("faces").getAsInt();
-        if(faces <= 0) {
-            event.reply("A 0 sided die doesnt exist!").queue();
-            return;
+        Optional<OptionMapping> faces = Optional.ofNullable(event.getOption("faces"));
+        if(faces.isEmpty()) {
+            event.reply("No faces value provided. Cannot roll a non existent die!").queue();
+        } else {
+            if (faces.get().getAsInt() <= 0) {
+                event.reply("A 0 sided die doesnt exist!").queue();
+                return;
+            }
+            int[] results = Die.roll(faces.get().getAsInt(), times.get().getAsInt());
+
+            event.reply(
+                    "Results from rolling a d" +
+                            faces.get().getAsInt() +
+                            " die " +
+                            times.get().getAsInt() +
+                            " times are " +
+                            appendArray(results)
+            ).queue();
         }
-
-        int[] results = Die.roll(faces, times);
-
-        event.reply(
-                "Results from rolling a d" +
-                faces +
-                " die " +
-                times +
-                " times are " +
-                appendArray(results)
-        ).queue();
     }
 
     public static String appendArray(int[] array) {
